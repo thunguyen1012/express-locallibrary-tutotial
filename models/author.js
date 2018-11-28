@@ -8,8 +8,18 @@ const AuthorSchema = new Schema({
   date_of_death: { type: Date }
 });
 
-AuthorSchema.virtual('name').get(() => `${this.family_name}, ${this.first_name}`);
-AuthorSchema.virtual('lifespan').get(() => `${this.date_of_death.getYear() - this.date_of_birth.getYear()}`);
-AuthorSchema.virtual('url').get(() => `/catalog/author/${this._id}`);
+// Virtual for author "full" name.
+AuthorSchema.virtual('name').get(function() {
+  return this.family_name + ', ' + this.first_name;
+});
+
+AuthorSchema.virtual('lifespan').get(function() {
+  return `${this.date_of_death.getYear() - this.date_of_birth.getYear()}`;
+});
+
+// Virtual for this author instance URL.
+AuthorSchema.virtual('url').get(function() {
+  return '/catalog/author/' + this._id;
+});
 
 module.exports = mongoose.model('Author', AuthorSchema);
