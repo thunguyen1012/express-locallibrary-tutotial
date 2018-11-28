@@ -1,7 +1,15 @@
 const Author = require('../models/author');
 
-exports.author_list = (req, res) => {
-  res.send('Author list');
+exports.author_list = (req, res, next) => {
+  Author.find()
+    .sort([['family_name', 'ascending']])
+    .exec((err, list_authors) => {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render('author_list', { title: 'Author List', author_list: list_authors });
+    });
 };
 
 exports.author_detail = (req, res) => {
